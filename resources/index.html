@@ -1,0 +1,132 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<style>
+@import url(https://fonts.googleapis.com/css?family=Merriweather);
+*,
+*:before,
+*:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+html, body {
+  background: #1a1a1a;
+  font-family: 'Merriweather', sans-serif;
+  padding: 1em;
+}
+label {
+  font-family: 'Merriweather', sans-serif;
+  font-size: 12px;
+  color: white;
+}
+h1 {
+  text-align: center;
+  color: #889;
+}
+form {
+  max-width: 1000px;
+  text-align: center;
+  margin: 20px auto;
+}
+form input, form textarea {
+  border: 0;
+  font-size: 12px;
+  outline: 0;
+  padding: 1em;
+  color: #bbb;
+  background-color: #444;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  display: block;
+  width: 100%;
+  margin-top: 1em;
+  font-family: 'Merriweather', sans-serif;
+  -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  resize: none;
+}
+form input:focus, form textarea:focus {
+  -moz-box-shadow: 0 0px 2px #e74c3c !important;
+  -webkit-box-shadow: 0 0px 2px #e74c3c !important;
+  box-shadow: 0 0px 2px #e74c3c !important;
+}
+form #input-submit {
+  color: white;
+  background: #334;
+  cursor: pointer;
+}
+form #input-submit:hover {
+  -moz-box-shadow: 0 1px 1px 1px rgba(170, 170, 170, 0.6);
+  -webkit-box-shadow: 0 1px 1px 1px rgba(170, 170, 170, 0.6);
+  box-shadow: 0 1px 1px 1px rgba(170, 170, 170, 0.6);
+}
+form textarea {
+  height: 126px;
+}
+.half {
+  float: left;
+  width: 48%;
+  margin-bottom: 1em;
+}
+.right {
+  width: 50%;
+}
+.left {
+  margin-right: 2%;
+}
+@media (max-width: 480px) {
+  .half {
+    width: 100%;
+    float: none;
+    margin-bottom: 0;
+  }
+}
+/* Clearfix */
+.cf:before,
+.cf:after {
+  content: " ";
+  /* 1 */
+  display: table;
+  /* 2 */
+}
+.cf:after {
+  clear: both;
+}
+</style>
+<h1>ws-smuggler</h1>
+<form class="cf" method="post" action="/send" target="hdn">
+  <div class="half left cf">
+    <label>Request<label>
+    <input type="text" name="target" placeholder="Target domain:port (e.g hahwul.com:33145)">
+    <textarea name="o_data" type="text" placeholder="Original HTTP Request"></textarea>
+    <textarea name="s_data" type="text" placeholder="Smuggled HTTP Request"></textarea>
+    <label style="display:inline"><input type="checkbox" id="ssl" name="ssl" style="display:inline; width: auto;"> SSL</label>
+      <input type="submit" value="Send" style="cursor:pointer;">
+  </div>
+  <div class="half right cf">
+    <label>Response<label>
+    <textarea id="res" type="text" style="height:383px;" readonly></textarea>
+  </div>
+  <div>
+        <textarea id="logs" type="text" style="height:200px; background: transparent; border: solid 1px;" readonly></textarea>
+  </div>
+  <iframe name="hdn" style="visibility:hidden"></iframe>
+</form>
+<script>
+        function updateLogs(){
+                $.get('/info', function(data) {
+                        logString = ""
+                        data.logs.forEach(function(d){
+                                logString = logString + d + "\n"
+                        })
+                        document.getElementById('logs').value = logString
+                        document.getElementById('res').value = data.res
+                });
+        }
+        setInterval(function() {
+                updateLogs()
+        }, 1000);
+</script>
+
+
